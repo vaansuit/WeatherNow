@@ -28,13 +28,16 @@ class _HomePageState extends State<HomePage> {
                 vertical: 100,
               ),
               child: Container(
-                color: Colors.white,
+                decoration: BoxDecoration(
+                    color: Color.fromARGB(156, 131, 187, 242),
+                    borderRadius: BorderRadius.circular(20)),
                 height: 200,
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     const Text(
-                      'Blumenau',
+                      'Your city',
                       style: TextStyle(
                         fontSize: 34,
                       ),
@@ -60,18 +63,44 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             Positioned(
-              child: ListView.separated(
-                separatorBuilder: (context, index) {
-                  return SizedBox(height: 10);
-                },
-                itemBuilder: (context, index) {
-                  return Container(
-                    height: 200,
-                    width: 20,
-                    color: Colors.white,
-                  );
-                },
-                itemCount: 5,
+              child: Align(
+                alignment: Alignment(0, 0.7),
+                child: Container(
+                  height: 200,
+                  width: 400,
+                  decoration: BoxDecoration(
+                    color: Color.fromARGB(62, 255, 255, 255),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: GridView.builder(
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 4,
+                        mainAxisExtent: 180,
+                      ),
+                      itemCount: 4,
+                      itemBuilder: (BuildContext context, int index) {
+                        return Container(
+                          margin: EdgeInsets.only(
+                            top: 20,
+                            left: 5,
+                            right: 5,
+                          ),
+                          height: 500,
+                          decoration: BoxDecoration(
+                              color: Color.fromARGB(156, 131, 187, 242),
+                              borderRadius: BorderRadius.circular(20)),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: const [
+                              Text('Day'),
+                              Icon(Icons.cloud),
+                              Text('19°'),
+                            ],
+                          ),
+                        );
+                      }),
+                ),
               ),
             ),
           ],
