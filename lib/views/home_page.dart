@@ -22,32 +22,57 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const Text(
-                  'Blumenau',
-                  style: TextStyle(
-                    fontSize: 34,
-                  ),
-                ),
-                const Text(
-                  '19°',
-                  style: TextStyle(
-                    fontSize: 34,
-                  ),
-                ),
-                const Text(
-                  'Mostly Clear',
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Text('H: 24'),
-                    Text('L: 30'),
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 100,
+                vertical: 100,
+              ),
+              child: Container(
+                color: Colors.white,
+                height: 200,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'Blumenau',
+                      style: TextStyle(
+                        fontSize: 34,
+                      ),
+                    ),
+                    const Text(
+                      '19°',
+                      style: TextStyle(
+                        fontSize: 34,
+                      ),
+                    ),
+                    const Text(
+                      'Mostly Clear',
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        Text('H: 24'),
+                        Text('L: 30'),
+                      ],
+                    )
                   ],
-                )
-              ],
+                ),
+              ),
+            ),
+            Positioned(
+              child: ListView.separated(
+                separatorBuilder: (context, index) {
+                  return SizedBox(height: 10);
+                },
+                itemBuilder: (context, index) {
+                  return Container(
+                    height: 200,
+                    width: 20,
+                    color: Colors.white,
+                  );
+                },
+                itemCount: 5,
+              ),
             ),
           ],
         ),
