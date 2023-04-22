@@ -54,8 +54,11 @@ class _HomePageState extends State<HomePage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: const [
-                        Text('H: 24'),
-                        Text('L: 30'),
+                        Text('Lat: 24'),
+                        SizedBox(
+                          width: 20,
+                        ),
+                        Text('Lon: 30'),
                       ],
                     )
                   ],
@@ -81,7 +84,7 @@ class _HomePageState extends State<HomePage> {
                       itemCount: 4,
                       itemBuilder: (BuildContext context, int index) {
                         return Container(
-                          margin: EdgeInsets.only(
+                          margin: const EdgeInsets.only(
                             top: 20,
                             left: 5,
                             right: 5,
@@ -95,7 +98,7 @@ class _HomePageState extends State<HomePage> {
                             children: const [
                               Text('Day'),
                               Icon(Icons.cloud),
-                              Text('19°'),
+                              Text('19°C'),
                             ],
                           ),
                         );
