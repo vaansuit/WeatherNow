@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:weather_app/repositories/location_repository.dart';
+
+import '../models/location_model.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -8,10 +11,31 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  LocationModel? _locationModel;
+  final _locationRepository = LocationRepository();
+
+  Future<void> _getCurrentLocation() async {
+    final locationModel = await _locationRepository.getCurrentLocation();
+    if (locationModel != null) {
+      setState(() {
+        _locationModel = locationModel;
+      });
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Failed to get current location'),
+      ));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            _getCurrentLocation();
+          },
+        ),
         body: Stack(
           children: [
             Container(
@@ -29,15 +53,15 @@ class _HomePageState extends State<HomePage> {
               ),
               child: Container(
                 decoration: BoxDecoration(
-                    color: Color.fromARGB(156, 131, 187, 242),
+                    color: const Color.fromARGB(156, 131, 187, 242),
                     borderRadius: BorderRadius.circular(20)),
                 height: 200,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Text(
-                      'Your city',
+                    Text(
+                      _locationModel?.address ?? 'Default',
                       style: TextStyle(
                         fontSize: 34,
                       ),

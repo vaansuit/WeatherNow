@@ -1,18 +1,11 @@
-import 'package:geolocator/geolocator.dart';
-
 class LocationModel {
-  Position? position;
-  String? city;
+  final double latitude;
+  final double longitude;
+  final String? address;
 
   LocationModel({
-    this.position,
-    this.city,
+    required this.latitude,
+    required this.longitude,
+    this.address,
   });
-
-  factory LocationModel.fromPosition(Position position, String city) {
-    return LocationModel(
-      position: position,
-      city: city,
-    );
-  }
 }
