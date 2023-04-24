@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class CurrentWeatherModel {
   String location;
   double temperature;
@@ -14,11 +16,15 @@ class CurrentWeatherModel {
   });
 
   factory CurrentWeatherModel.fromJson(Map<String, dynamic> json) {
+    final location = json['location'];
+    final current = json['current'];
+
     return CurrentWeatherModel(
-        location: json[''],
-        temperature: json[''],
-        weatherCondition: json[''],
-        latitude: json[''],
-        longitude: json['']);
+      location: location['name'],
+      temperature: current['temp_c'],
+      weatherCondition: current['condition']['text'],
+      latitude: location['lat'],
+      longitude: location['long'],
+    );
   }
 }

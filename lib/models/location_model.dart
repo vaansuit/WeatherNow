@@ -1,7 +1,18 @@
+import 'package:geolocator/geolocator.dart';
+
 class LocationModel {
-  String city;
+  Position? position;
+  String? city;
 
   LocationModel({
-    required this.city,
+    this.position,
+    this.city,
   });
+
+  factory LocationModel.fromPosition(Position position, String city) {
+    return LocationModel(
+      position: position,
+      city: city,
+    );
+  }
 }
