@@ -1,6 +1,13 @@
+import 'dart:math';
+
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 
+import '../models/location_model.dart';
+
 class LocationRepository {
+  final locationModel = LocationModel();
+
   Future<bool> handleLocationPermission() async {
     bool serviceEnabled;
     LocationPermission permission;
@@ -25,5 +32,13 @@ class LocationRepository {
       return false;
     }
     return true;
+  }
+
+  Future<void> getAddresFromLatLng(Position position) async {
+    await placemarkFromCoordinates(position.latitude, position.longitude)
+        .then((List<Placemark> placemarks) {
+      Placemark place = placemarks[0];
+      locationModel.city == place.subAdministrativeArea;
+    });
   }
 }
