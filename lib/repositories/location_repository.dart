@@ -4,39 +4,38 @@ import '../models/location_model.dart';
 
 class LocationRepository {
   Future<LocationModel?> getCurrentLocation() async {
-    bool serviceEnabled;
-    LocationPermission permission;
-    Position position;
+    bool isServiceEnabled;
+    LocationPermission userLocationPermition;
+    Position userPosition;
 
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
+    isServiceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!isServiceEnabled) {
       return null;
     }
 
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
+    userLocationPermition = await Geolocator.checkPermission();
+    if (userLocationPermition == LocationPermission.denied) {
+      userLocationPermition = await Geolocator.requestPermission();
+      if (userLocationPermition == LocationPermission.denied) {
         return null;
       }
     }
-    if (permission == LocationPermission.deniedForever) {
+    if (userLocationPermition == LocationPermission.deniedForever) {
       return null;
     }
 
     try {
-      position = await Geolocator.getCurrentPosition(
+      userPosition = await Geolocator.getCurrentPosition(
           desiredAccuracy: LocationAccuracy.high);
-      final placemarks =
-          await placemarkFromCoordinates(position.latitude, position.longitude);
+      final placemarks = await placemarkFromCoordinates(
+          userPosition.latitude, userPosition.longitude);
       final address = placemarks.first.subAdministrativeArea ?? 'Unknown';
       return LocationModel(
-        latitude: position.latitude,
-        longitude: position.longitude,
-        address: address,
+        latitude: userPosition.latitude,
+        longitude: userPosition.longitude,
+        city: address,
       );
     } catch (e) {
-      print(e);
       return null;
     }
   }

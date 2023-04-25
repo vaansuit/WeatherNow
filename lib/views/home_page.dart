@@ -61,8 +61,8 @@ class _HomePageState extends State<HomePage> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      _locationModel?.address ?? 'Default',
-                      style: TextStyle(
+                      _locationModel?.city ?? 'Default',
+                      style: const TextStyle(
                         fontSize: 34,
                       ),
                     ),
@@ -91,12 +91,12 @@ class _HomePageState extends State<HomePage> {
             ),
             Positioned(
               child: Align(
-                alignment: Alignment(0, 0.7),
+                alignment: const Alignment(0, 0.7),
                 child: Container(
                   height: 200,
                   width: 400,
                   decoration: BoxDecoration(
-                    color: Color.fromARGB(62, 255, 255, 255),
+                    color: const Color.fromARGB(62, 255, 255, 255),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: GridView.builder(
@@ -115,7 +115,7 @@ class _HomePageState extends State<HomePage> {
                           ),
                           height: 500,
                           decoration: BoxDecoration(
-                              color: Color.fromARGB(156, 131, 187, 242),
+                              color: const Color.fromARGB(156, 131, 187, 242),
                               borderRadius: BorderRadius.circular(20)),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
