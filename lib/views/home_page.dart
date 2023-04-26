@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:weather_app/repositories/current_weather_repository.dart';
+
 import 'package:weather_app/repositories/location_repository.dart';
 
+import '../models/current_weather_model.dart';
 import '../models/location_model.dart';
 
 class HomePage extends StatefulWidget {
@@ -11,7 +14,10 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  LocationModel? _locationModel;
+  LocationModel _locationModel = LocationModel(city: 'Default');
+  CurrentWeatherModel? _currentWeatherModel;
+
+  final _currentWeatherRepository = CurrentWeatherRepository();
   final _locationRepository = LocationRepository();
 
   Future<void> _getCurrentLocation() async {
@@ -20,10 +26,35 @@ class _HomePageState extends State<HomePage> {
       setState(() {
         _locationModel = locationModel;
       });
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Failed to get current location'),
-      ));
+    } else if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Failed to get current location',
+          ),
+        ),
+      );
+    }
+  }
+
+  Future<void> _getCurrentWeather() async {
+    try {
+      final currentWeatherModel =
+          await _currentWeatherRepository.getCurrentWeather('Blumenau');
+
+      setState(() {
+        _currentWeatherModel = currentWeatherModel;
+      });
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              'Failed to load weather data',
+            ),
+          ),
+        );
+      }
     }
   }
 
@@ -32,8 +63,9 @@ class _HomePageState extends State<HomePage> {
     return SafeArea(
       child: Scaffold(
         floatingActionButton: FloatingActionButton(
-          onPressed: () {
+          onPressed: () async {
             _getCurrentLocation();
+            _getCurrentWeather();
           },
         ),
         body: Stack(
@@ -61,13 +93,13 @@ class _HomePageState extends State<HomePage> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      _locationModel?.city ?? 'Default',
+                      _locationModel.city.toString(),
                       style: const TextStyle(
                         fontSize: 34,
                       ),
                     ),
                     const Text(
-                      '19°',
+                      '19',
                       style: TextStyle(
                         fontSize: 34,
                       ),

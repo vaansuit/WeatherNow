@@ -31,8 +31,6 @@ class LocationRepository {
           userPosition.latitude, userPosition.longitude);
       final address = placemarks.first.subAdministrativeArea ?? 'Unknown';
       return LocationModel(
-        latitude: userPosition.latitude,
-        longitude: userPosition.longitude,
         city: address,
       );
     } catch (e) {
