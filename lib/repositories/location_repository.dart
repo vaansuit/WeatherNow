@@ -1,44 +1,40 @@
-import 'dart:math';
-
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
-
 import '../models/location_model.dart';
 
 class LocationRepository {
-  final locationModel = LocationModel();
+  Future<LocationModel?> getCurrentLocation() async {
+    bool isServiceEnabled;
+    LocationPermission userLocationPermition;
+    Position userPosition;
 
-  Future<bool> handleLocationPermission() async {
-    bool serviceEnabled;
-    LocationPermission permission;
-
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      print('Location services are disabled. Please enable the services');
-      return false;
+    isServiceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!isServiceEnabled) {
+      return null;
     }
 
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        print('Location permissions are denied');
-        return false;
+    userLocationPermition = await Geolocator.checkPermission();
+    if (userLocationPermition == LocationPermission.denied) {
+      userLocationPermition = await Geolocator.requestPermission();
+      if (userLocationPermition == LocationPermission.denied) {
+        return null;
       }
     }
-    if (permission == LocationPermission.deniedForever) {
-      print(
-          'Location permissions are permanently denied, we cannot request permissions.');
-      return false;
+    if (userLocationPermition == LocationPermission.deniedForever) {
+      return null;
     }
-    return true;
-  }
 
-  Future<void> getAddresFromLatLng(Position position) async {
-    await placemarkFromCoordinates(position.latitude, position.longitude)
-        .then((List<Placemark> placemarks) {
-      Placemark place = placemarks[0];
-      locationModel.city == place.subAdministrativeArea;
-    });
+    try {
+      userPosition = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high);
+      final placemarks = await placemarkFromCoordinates(
+          userPosition.latitude, userPosition.longitude);
+      final address = placemarks.first.subAdministrativeArea ?? 'Unknown';
+      return LocationModel(
+        city: address,
+      );
+    } catch (e) {
+      return null;
+    }
   }
 }

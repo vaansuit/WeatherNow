@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:weather_app/repositories/current_weather_repository.dart';
+
+import 'package:weather_app/repositories/location_repository.dart';
+
+import '../models/current_weather_model.dart';
+import '../models/location_model.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -8,10 +14,60 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  LocationModel _locationModel = LocationModel(city: 'Default');
+  CurrentWeatherModel? _currentWeatherModel;
+
+  final _currentWeatherRepository = CurrentWeatherRepository();
+  final _locationRepository = LocationRepository();
+
+  Future<void> _getCurrentLocation() async {
+    final locationModel = await _locationRepository.getCurrentLocation();
+    if (locationModel != null) {
+      setState(() {
+        _locationModel = locationModel;
+      });
+    } else if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Failed to get current location',
+          ),
+        ),
+      );
+    }
+  }
+
+  Future<void> _getCurrentWeather() async {
+    try {
+      final currentWeatherModel =
+          await _currentWeatherRepository.getCurrentWeather('Blumenau');
+
+      setState(() {
+        _currentWeatherModel = currentWeatherModel;
+      });
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              'Failed to load weather data',
+            ),
+          ),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        floatingActionButton: FloatingActionButton(
+          onPressed: () async {
+            _getCurrentLocation();
+            _getCurrentWeather();
+          },
+        ),
         body: Stack(
           children: [
             Container(
@@ -29,21 +85,21 @@ class _HomePageState extends State<HomePage> {
               ),
               child: Container(
                 decoration: BoxDecoration(
-                    color: Color.fromARGB(156, 131, 187, 242),
+                    color: const Color.fromARGB(156, 131, 187, 242),
                     borderRadius: BorderRadius.circular(20)),
                 height: 200,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Text(
-                      'Your city',
-                      style: TextStyle(
+                    Text(
+                      _locationModel.city.toString(),
+                      style: const TextStyle(
                         fontSize: 34,
                       ),
                     ),
                     const Text(
-                      '19°',
+                      '19',
                       style: TextStyle(
                         fontSize: 34,
                       ),
@@ -67,12 +123,12 @@ class _HomePageState extends State<HomePage> {
             ),
             Positioned(
               child: Align(
-                alignment: Alignment(0, 0.7),
+                alignment: const Alignment(0, 0.7),
                 child: Container(
                   height: 200,
                   width: 400,
                   decoration: BoxDecoration(
-                    color: Color.fromARGB(62, 255, 255, 255),
+                    color: const Color.fromARGB(62, 255, 255, 255),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: GridView.builder(
@@ -91,7 +147,7 @@ class _HomePageState extends State<HomePage> {
                           ),
                           height: 500,
                           decoration: BoxDecoration(
-                              color: Color.fromARGB(156, 131, 187, 242),
+                              color: const Color.fromARGB(156, 131, 187, 242),
                               borderRadius: BorderRadius.circular(20)),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,

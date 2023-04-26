@@ -15,16 +15,30 @@ class CurrentWeatherModel {
     required this.longitude,
   });
 
-  factory CurrentWeatherModel.fromJson(Map<String, dynamic> json) {
-    final location = json['location'];
-    final current = json['current'];
+  Map<String, dynamic> toMap() {
+    final result = <String, dynamic>{};
 
+    result.addAll({'location': location});
+    result.addAll({'temperature': temperature});
+    result.addAll({'weatherCondition': weatherCondition});
+    result.addAll({'latitude': latitude});
+    result.addAll({'longitude': longitude});
+
+    return result;
+  }
+
+  factory CurrentWeatherModel.fromMap(Map<String, dynamic> map) {
     return CurrentWeatherModel(
-      location: location['name'],
-      temperature: current['temp_c'],
-      weatherCondition: current['condition']['text'],
-      latitude: location['lat'],
-      longitude: location['long'],
+      location: map['location'] ?? '',
+      temperature: map['temperature']?.toDouble() ?? 0.0,
+      weatherCondition: map['weatherCondition'] ?? '',
+      latitude: map['latitude']?.toDouble() ?? 0.0,
+      longitude: map['longitude']?.toDouble() ?? 0.0,
     );
   }
+
+  String toJson() => json.encode(toMap());
+
+  factory CurrentWeatherModel.fromJson(String source) =>
+      CurrentWeatherModel.fromMap(json.decode(source));
 }
